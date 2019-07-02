@@ -1,23 +1,32 @@
 const Contact = require('../models/contact');
+const contactValidator = require('../validators/contact.validator');
 const webToken = require('jsonwebtoken');
 
 const tokenKey = 'super_secret_password';
 
 exports.submitMessage = (req, res) => {
 	const contactMessage = new Contact(req.body);
-	contactMessage
-		.save()
-		.then((response) => {
-			res.status(200).json({
-				message: 'Message successfully submitted.',
-			});
-		})
-		.catch((error) => {
-			res.status(500).json({
-				message: 'Failed to submit message',
-				error,
-			});
+	const validator = contactValidator.validate(req.body);
+	if (validator.error) {
+		res.status(400).json({
+			message: validator.error.details[0].message,
 		});
+	} else {
+		contactMessage
+			.save()
+			.then((response) => {
+				res.status(200).json({
+					message: 'Message successfully submitted.',
+					validator,
+				});
+			})
+			.catch((error) => {
+				res.status(500).json({
+					message: 'Failed to submit message',
+					error,
+				});
+			});
+	}
 };
 
 exports.getMessages = (req, res) => {
@@ -36,7 +45,7 @@ exports.getMessages = (req, res) => {
 					});
 				})
 				.catch((error) => {
-					res.status(500).json({
+					res.status(404).json({
 						message: 'Failed to get messages',
 						data: error,
 					});

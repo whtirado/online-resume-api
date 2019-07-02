@@ -1,43 +1,51 @@
 const Auth = require('../models/auth');
 const webToken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const authValidator = require('../validators/auth.validator');
 
 const tokenKey = 'super_secret_password';
 
 exports.loginUser = (req, res) => {
 	let userData;
-	Auth.findOne({ email: req.body.email })
-		.then((data) => {
-			if (!data) {
-				res.status(401).json({ message: 'Invalid Credentials' });
-			}
-			userData = data;
-			return bcrypt.compare(req.body.password, data.password);
-		})
-		.then((response) => {
-			if (response) {
-				const tokenData = {
-					id: userData._id,
-					email: userData.email,
-					date: new Date(),
-				};
-				res.status(200).json({
-					message: 'User Verified',
-					token: webToken.sign(tokenData, tokenKey, {
-						expiresIn: '1h',
-					}),
-				});
-			} else {
+	const validator = authValidator.validate(req.body);
+	if (validator.error) {
+		res.status(400).json({
+			message: validator.error.details[0].message,
+		});
+	} else {
+		Auth.findOne({ email: req.body.email })
+			.then((data) => {
+				if (!data) {
+					res.status(401).json({ message: 'Invalid Credentials' });
+				}
+				userData = data;
+				return bcrypt.compare(req.body.password, data.password);
+			})
+			.then((response) => {
+				if (response) {
+					const tokenData = {
+						id: userData._id,
+						email: userData.email,
+						date: new Date(),
+					};
+					res.status(200).json({
+						message: 'User Verified',
+						token: webToken.sign(tokenData, tokenKey, {
+							expiresIn: '1h',
+						}),
+					});
+				} else {
+					res.status(401).json({
+						message: 'Authentication Error',
+					});
+				}
+			})
+			.catch((error) => {
 				res.status(401).json({
 					message: 'Authentication Error',
 				});
-			}
-		})
-		.catch((error) => {
-			res.status(401).json({
-				message: 'Authentication Error',
 			});
-		});
+	}
 };
 
 exports.signupUser = (req, res) => {
