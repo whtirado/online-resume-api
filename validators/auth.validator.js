@@ -5,7 +5,7 @@ const authSchema = joi.object().keys({
 		.string()
 		.email()
 		.min(8)
-		.max(20)
+		.max(50)
 		.required(),
 	password: joi
 		.string()
