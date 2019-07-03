@@ -8,7 +8,7 @@ const corsCtrl = require('./controllers/cors');
 
 mongoose
 	.connect(
-		'mongo_connection_string_here'
+		'mongodb+srv://whtirado:mongo@testdb-lxady.mongodb.net/OnlineResumeDB?w=majority'
 	)
 	.then(() => {
 		console.log('Connected to database');
