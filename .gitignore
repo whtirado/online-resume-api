@@ -1,5 +1,5 @@
 # server config
-/config
+# /config
 
 # dependencies
 /node_modules

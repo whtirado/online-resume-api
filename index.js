@@ -1,11 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-
 const config = require('./config/server.config');
 
 const authRoutes = require('./routes/auth');
 const contactRoute = require('./routes/contact');
+const corsCtrl = require('./controllers/cors');
 
 mongoose
 	.connect(
@@ -24,8 +23,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-
+app.use(corsCtrl.headers);
 app.use('/api/auth', authRoutes);
 app.use('/api/contact/message', contactRoute);
 app.use('/*', (req, res) => {
