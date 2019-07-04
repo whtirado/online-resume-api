@@ -8,8 +8,8 @@ const corsCtrl = require('./controllers/cors');
 
 mongoose
 	.connect(
-		`mongodb+srv://${process.env.PLAYER}:${
-			process.env.ITEM
+		`mongodb+srv://${process.env.USER}:${
+			process.env.PASSWORD
 		}@testdb-lxady.mongodb.net/OnlineResumeDB?w=majority`
 	)
 	.then(() => {
