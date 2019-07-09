@@ -36,13 +36,13 @@ exports.loginUser = (req, res) => {
 					});
 				} else {
 					res.status(401).json({
-						message: 'Authentication Error',
+						message: 'Invalid Credentials',
 					});
 				}
 			})
 			.catch((error) => {
-				res.status(401).json({
-					message: 'Authentication Error',
+				res.status(400).json({
+					message: 'Authentication Failed',
 				});
 			});
 	}

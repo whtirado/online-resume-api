@@ -30,6 +30,4 @@ app.use('/*', (req, res) => {
 	res.status(404).json({ message: 'Invalid request' });
 });
 
-const port = process.env.PORT || 5000;
-
-app.listen(port);
+app.listen(config.mongo.port);
