@@ -4,7 +4,10 @@ const config = require('./config/server.config');
 
 const authRoutes = require('./routes/auth');
 const contactRoute = require('./routes/contact');
-const corsCtrl = require('./controllers/cors');
+// const corsCtrl = require('./controllers/cors');
+const cors = require('cors');
+
+const app = express();
 
 mongoose
 	.connect(
@@ -20,14 +23,30 @@ mongoose
 		console.log('Database Error', err);
 	});
 
-const app = express();
+const whitelist = [
+	'https://whtirado-online-resume.herokuapp.com',
+	'http://localhost:4200',
+];
+const corsOptions = {
+	origin: function(origin, callback) {
+		if (whitelist.indexOf(origin) !== -1) {
+			callback(null, true);
+		} else {
+			callback(new Error('Not allowed by CORS'));
+		}
+	},
+};
 
 app.use(express.json());
-app.use(corsCtrl.headers);
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/contact/message', contactRoute);
+
 app.use('/*', (req, res) => {
-	res.status(404).json({ message: 'Invalid request' });
+	res.status(400).json({ message: 'Invalid request' });
 });
 
 app.listen(config.mongo.port);
