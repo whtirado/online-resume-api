@@ -53,3 +53,26 @@ exports.getMessages = (req, res) => {
 		}
 	});
 };
+
+exports.deleteMessage = (req, res) => {
+	Contact.findOneAndDelete({ _id: req.params.id })
+		.then((response) => {
+			if (response) {
+				res.status(200).json({
+					message: 'Message deleted',
+					data: response,
+				});
+			} else {
+				res.status(400).json({
+					message: 'Message not deleted',
+					id: req.params.id,
+				});
+			}
+		})
+		.catch((error) => {
+			res.status(400).json({
+				message: 'Error while deleting message',
+				error,
+			});
+		});
+};

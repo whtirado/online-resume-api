@@ -1,6 +1,14 @@
 const joi = require('@hapi/joi');
 
-const authSchema = joi.object().keys({
+const authSchemaSignin = joi.object().keys({
+	email: joi
+		.string()
+		.email()
+		.required(),
+	password: joi.string().required(),
+});
+
+const authSchemaSignup = joi.object().keys({
 	email: joi
 		.string()
 		.email()
@@ -14,6 +22,10 @@ const authSchema = joi.object().keys({
 		.required(),
 });
 
-exports.validate = (reqBody) => {
-	return joi.validate(reqBody, authSchema);
+exports.validateSignin = (reqBody) => {
+	return joi.validate(reqBody, authSchemaSignin);
+};
+
+exports.validateSignup = (reqBody) => {
+	return joi.validate(reqBody, authSchemaSignup);
 };

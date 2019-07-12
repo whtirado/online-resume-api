@@ -4,13 +4,14 @@ const whitelist = [
 ];
 
 const corsOptions = {
-	origin: function(origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
-		}
-	},
+	// origin: function(origin, callback) {
+	// 	if (whitelist.indexOf(origin) !== -1) {
+	// 		callback(null, true);
+	// 	} else {
+	// 		callback(new Error('Not allowed by CORS'));
+	// 	}
+	// },
+	origin: '*',
 	allowedHeaders:
 		'Origin, X-Requested-With, Content-Type, Accept, Authorization',
 	methods: 'GET, POST, PUT, DELETE, OPTIONS',

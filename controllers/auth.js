@@ -7,7 +7,7 @@ const tokenKey = 'super_secret_password';
 
 exports.loginUser = (req, res) => {
 	let userData;
-	const validator = authValidator.validate(req.body);
+	const validator = authValidator.validateSignin(req.body);
 	if (validator.error) {
 		res.status(400).json({
 			message: validator.error.details[0].message,
